@@ -1,0 +1,8 @@
+#loginForm .form-group, #addItemForm .form-group, #registerForm .form-group, .advSearch .form-group {display: block;clear: both;}
+#logInfo div {display: inline-block;}
+#logInfo div span {font-weight: bold;}
+#logInfo div:nth-child(2) {margin-left: 50px}
+#tableItems {margin: 20px 0}
+.error-msg {color: red}
+.error_msg {color: red; text-align:left; font-size:20px}
+#searchParameters .errors {color: red}
