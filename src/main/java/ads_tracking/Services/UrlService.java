@@ -31,7 +31,7 @@ public class UrlService {
                         for (Url url : urls) {
                             if (url.isActive()) {
                                 getAds(url.getId());
-                                Thread.sleep(60000);
+                                Thread.sleep(10000);
                             }
                         }
                     } catch (DAOException e) {
@@ -42,7 +42,7 @@ public class UrlService {
                 }
             }
         });
-//        thread.start();
+        thread.start();
     }
 
     public List<Url> handleUrls() throws DAOException {
