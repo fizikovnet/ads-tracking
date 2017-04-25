@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OracleUrl implements UrlDAO {
+public class PostgreUrl implements UrlDAO {
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public OracleUrl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public PostgreUrl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

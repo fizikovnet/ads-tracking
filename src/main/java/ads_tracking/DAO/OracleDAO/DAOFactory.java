@@ -15,23 +15,9 @@ public abstract class DAOFactory {
      */
     public abstract UserDAO getUserDAO();
 
-    /**
-     * Get BidDAO implementation
-     *
-     * @return BidDAO
-     */
-    public abstract BidDAO getBidDAO();
-
-    /**
-     * Get ItemDAO implementation
-     *
-     * @return ItemDAO
-     */
-    public abstract ItemDAO getItemDAO();
-
     public abstract UrlDAO getUrlDAO();
 
-    public abstract AdsDAO getAdsDAO();
+    public abstract AdDAO getAdsDAO();
 
     /**
      * Return factory attached for concrete Data Base
@@ -40,7 +26,7 @@ public abstract class DAOFactory {
      * @return DAOFactory
      */
     public static DAOFactory getDAOFactory() {
-        return new OracleFactory();
+        return new PostgreFactory();
     }
 
 }

@@ -6,13 +6,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Locale;
 
 /**
- * Factory for Oracle DataBase
+ * Factory for PostgreSQL DataBase
  */
 @Repository
-public class OracleFactory extends DAOFactory {
+public class PostgreFactory extends DAOFactory {
 
 
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -28,31 +27,15 @@ public class OracleFactory extends DAOFactory {
      */
     @Override
     public UserDAO getUserDAO() {
-        return new OracleUser(jdbcTemplate);
+        return new PostgreUser(jdbcTemplate);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public BidDAO getBidDAO() {
-        return new OracleBid(jdbcTemplate);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ItemDAO getItemDAO() {
-        return new OracleItem(jdbcTemplate);
-    }
-
-    public AdsDAO getAdsDAO() {
-        return new OracleAds(jdbcTemplate);
+    public AdDAO getAdsDAO() {
+        return new PostgreAds(jdbcTemplate);
     }
 
     @Override
     public UrlDAO getUrlDAO() {
-        return new OracleUrl(jdbcTemplate);
+        return new PostgreUrl(jdbcTemplate);
     }
 }

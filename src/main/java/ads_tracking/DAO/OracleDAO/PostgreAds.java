@@ -1,9 +1,9 @@
 package ads_tracking.DAO.OracleDAO;
 
-import ads_tracking.DAO.AdsDAO;
+import ads_tracking.DAO.AdDAO;
+import ads_tracking.Entity.Ad;
 import ads_tracking.Entity.Url;
 import ads_tracking.Exception.DAOException;
-import ads_tracking.Model.Ads;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -11,11 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class OracleAds implements AdsDAO {
+public class PostgreAds implements AdDAO {
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public OracleAds(NamedParameterJdbcTemplate jdbcTemplate) {
+    public PostgreAds(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -28,7 +28,7 @@ public class OracleAds implements AdsDAO {
     private static final String DELETE_QUERY = "DELETE FROM ads WHERE url_id = CAST(:url_id AS integer)";
 
     @Override
-    public boolean create(Ads.Ad object) throws DAOException {
+    public boolean create(Ad object) throws DAOException {
         if (this.jdbcTemplate.update(CREATE_QUERY, getMapForInsert(object)) == 1) {
             return true;
         }
@@ -36,12 +36,12 @@ public class OracleAds implements AdsDAO {
     }
 
     @Override
-    public boolean update(Ads.Ad object) throws DAOException {
+    public boolean update(Ad object) throws DAOException {
         return false;
     }
 
     @Override
-    public boolean delete(Ads.Ad object) throws DAOException {
+    public boolean delete(Ad object) throws DAOException {
         return false;
     }
 
@@ -51,8 +51,8 @@ public class OracleAds implements AdsDAO {
     }
 
     @Override
-    public Ads.Ad getById(int id) throws DAOException {
-        List<Ads.Ad> result = jdbcTemplate.query(SELECT_QUERY_BY_ID, Collections.singletonMap("id", id), new ItemMapper());
+    public Ad getById(int id) throws DAOException {
+        List<Ad> result = jdbcTemplate.query(SELECT_QUERY_BY_ID, Collections.singletonMap("id", id), new ItemMapper());
         if (!result.isEmpty()) {
             return result.get(0);
         }
@@ -60,27 +60,27 @@ public class OracleAds implements AdsDAO {
     }
 
     @Override
-    public List<Ads.Ad> getAdsByUrlId(int url_id) {
+    public List<Ad> getAdsByUrlId(int url_id) {
         return jdbcTemplate.query(SELECT_QUERY_BY_URL_ID, Collections.singletonMap("url_id", url_id), new ItemMapper());
     }
 
     @Override
-    public void setSendFlagForAds(List<Ads.Ad> ads) {
+    public void setSendFlagForAds(List<Ad> ads) {
         //ToDo переделать на batch
-        for (Ads.Ad ad : ads) {
+        for (Ad ad : ads) {
             this.jdbcTemplate.update(UPDATE_SEND_FLAG_QUERY, Collections.singletonMap("id", ad.getId()));
         }
     }
 
     @Override
-    public List<Ads.Ad> getAll() throws DAOException {
+    public List<Ad> getAll() throws DAOException {
         return jdbcTemplate.query(SELECT_QUERY, new ItemMapper());
     }
 
-    private static final class ItemMapper implements RowMapper<Ads.Ad> {
+    private static final class ItemMapper implements RowMapper<Ad> {
 
-        public Ads.Ad mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Ads.Ad ad = new Ads.Ad();
+        public Ad mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Ad ad = new Ad();
             ad.setId(rs.getInt("id"));
             ad.setLink(rs.getString("link"));
             ad.setTitle(rs.getString("title"));
@@ -93,7 +93,7 @@ public class OracleAds implements AdsDAO {
         }
     }
 
-    private Map<String, Object> getMapForInsert(Ads.Ad object) {
+    private Map<String, Object> getMapForInsert(Ad object) {
         Map<String, Object> namedParameters = new HashMap<>();
         namedParameters.put("link", object.getLink());
         namedParameters.put("title", object.getTitle());

@@ -1,9 +1,9 @@
 package ads_tracking.Services;
 
 import ads_tracking.DAO.OracleDAO.DAOFactory;
+import ads_tracking.Entity.Ad;
 import ads_tracking.Entity.Url;
 import ads_tracking.Exception.DAOException;
-import ads_tracking.Model.Ads;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -49,18 +50,18 @@ public class UrlService {
         return uriList;
     }
 
-    public Ads getAds(int urlId) throws DAOException {
+    public List<Ad> getAds(int urlId) throws DAOException {
         Url url = daoFactory.getUrlDAO().getById(urlId);
-        Ads ads = getUrlContent(url.getUrl());
+        List<Ad> ads = getUrlContent(url.getUrl());
         fillDB(ads, urlId);
 
         return ads;
     }
 
-    private void fillDB(Ads ads, int urlId) throws DAOException {
-        List<Ads.Ad> existAds = daoFactory.getAdsDAO().getAdsByUrlId(urlId);
-        outer:for (Ads.Ad newAd : ads.adList) {
-            for (Ads.Ad existAd : existAds) {
+    private void fillDB(List<Ad> ads, int urlId) throws DAOException {
+        List<Ad> existAds = daoFactory.getAdsDAO().getAdsByUrlId(urlId);
+        outer:for (Ad newAd : ads) {
+            for (Ad existAd : existAds) {
                 if (existAd.getsId().trim().equals(newAd.getsId())) {
                     continue outer;
                 }
@@ -70,14 +71,14 @@ public class UrlService {
         }
     }
 
-    private Ads getUrlContent(String uri) {
+    private List<Ad> getUrlContent(String uri) {
         Document doc = null;
-        Ads ads = new Ads();
+        List<Ad> ads = new ArrayList<>();
         try {
             doc = Jsoup.connect(uri).get();
             Elements items = doc.getElementsByClass("item");
             for (Element item : items) {
-                Ads.Ad ad = new Ads.Ad();
+                Ad ad = new Ad();
                 ad.setsId(item.attr("id").trim());
                 Elements description = item.getElementsByClass("item-description-title-link");
                 Element title = description.get(0).getElementsByClass("item-description-title-link").get(0);
@@ -86,7 +87,7 @@ public class UrlService {
 
                 Elements about = item.getElementsByClass("about");
                 ad.setDescription(about.text());
-                ads.adList.add(ad);
+                ads.add(ad);
             }
         } catch (IOException e) {
             e.printStackTrace();

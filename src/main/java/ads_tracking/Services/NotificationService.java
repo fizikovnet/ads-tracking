@@ -1,10 +1,10 @@
 package ads_tracking.Services;
 
 import ads_tracking.DAO.OracleDAO.DAOFactory;
+import ads_tracking.Entity.Ad;
 import ads_tracking.Entity.Url;
 import ads_tracking.Entity.User;
 import ads_tracking.Exception.DAOException;
-import ads_tracking.Model.Ads;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -45,8 +45,8 @@ public class NotificationService {
             for (Url url : listUrls) {
                 if (url.isActive()) {
                     //ToDo вытаскивать из базы только не отправленные объявления
-                    List<Ads.Ad> adList = daoFactory.getAdsDAO().getAdsByUrlId(url.getId());
-                    for (Ads.Ad ad : adList) {
+                    List<Ad> adList = daoFactory.getAdsDAO().getAdsByUrlId(url.getId());
+                    for (Ad ad : adList) {
                         if (!ad.isSend()) {
                             sendNotify(ad);
                         }
@@ -58,7 +58,7 @@ public class NotificationService {
         }
     }
 
-    private void sendNotify(Ads.Ad ad) throws DAOException {
+    private void sendNotify(Ad ad) throws DAOException {
 
         Url url = daoFactory.getUrlDAO().getById(ad.getUrlId());
         User user = daoFactory.getUserDAO().getById(url.getUserId());

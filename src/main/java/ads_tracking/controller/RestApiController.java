@@ -2,10 +2,12 @@ package ads_tracking.controller;
 
 import ads_tracking.DAO.OracleDAO.DAOFactory;
 import ads_tracking.DAO.UserDAO;
+import ads_tracking.Entity.Ad;
 import ads_tracking.Entity.Url;
 import ads_tracking.Entity.User;
 import ads_tracking.Exception.DAOException;
-import ads_tracking.Model.Ads;
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,7 +35,7 @@ public class RestApiController {
         try {
             user = userDAO.getUserByLogin(login);
             if (user != null) {
-                if (user.getPassword().equals(password)) {
+                if (user.getPassword().equals(Hashing.sha256().hashString(password, Charsets.UTF_8).toString())) {
                     credential.username = user.getFullName();
                     credential.userId = user.getId();
                 } else {
@@ -62,7 +64,7 @@ public class RestApiController {
             User user = new User();
             user.setFullName(name);
             user.setLogin(login);
-            user.setPassword(password);
+            user.setPassword(Hashing.sha256().hashString(password, Charsets.UTF_8).toString());
             userDAO.create(user);
             User existUser = daoFactory.getUserDAO().getUserByLogin(user.getLogin());
             if (existUser != null) {
@@ -109,8 +111,8 @@ public class RestApiController {
     }
 
     @RequestMapping(value = "/api/ads", method = RequestMethod.POST)
-    public @ResponseBody List<Ads.Ad> getItems(HttpServletRequest request, HttpServletResponse response) {
-        final List<Ads.Ad> ads = new ArrayList<>();
+    public @ResponseBody List<Ad> getItems(HttpServletRequest request, HttpServletResponse response) {
+        final List<Ad> ads = new ArrayList<>();
         try {
             User user = daoFactory.getUserDAO().getById(Integer.valueOf(request.getParameter("user_id")));
             ads.addAll(daoFactory.getAdsDAO().getAdsByUrlId(daoFactory.getUrlDAO().getUrlByLogin(user.getId()).getId()));
@@ -140,12 +142,12 @@ public class RestApiController {
     }
 
     private static class Credential {
-        public boolean error = false;
-        public String username;
-        public String uri;
-        public String act_uri;
-        public int userId;
-        public String error_msg;
+        boolean error = false;
+        String username;
+        String uri;
+        String act_uri;
+        int userId;
+        String error_msg;
     }
 
 }

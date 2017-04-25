@@ -4,6 +4,8 @@ import ads_tracking.DAO.OracleDAO.DAOFactory;
 import ads_tracking.DAO.UserDAO;
 import ads_tracking.Entity.User;
 import ads_tracking.Exception.DAOException;
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,7 +50,7 @@ public class UserController {
             String password = request.getParameter("password");
             User user = userDAO.getUserByLogin(login);
             if (user != null) {
-                if (user.getPassword().equals(password)) {
+                if (user.getPassword().equals(Hashing.sha256().hashString(password, Charsets.UTF_8).toString())) {
                     HttpSession session = request.getSession();
                     session.setAttribute("user", user);
                     return "redirect:" + "/index";

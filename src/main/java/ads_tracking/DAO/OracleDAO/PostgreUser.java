@@ -5,7 +5,6 @@ import ads_tracking.Entity.Role;
 import ads_tracking.Entity.Url;
 import ads_tracking.Entity.User;
 import ads_tracking.Exception.DAOException;
-import com.google.common.collect.ImmutableMap;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,12 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class working with connection from {@link OracleFactory} and implements all methods from {@link UserDAO}
+ * This class working with connection from {@link PostgreFactory} and implements all methods from {@link UserDAO}
  * and {@link ads_tracking.DAO.CommonDAOInterface} for working with User entities
  */
-public class OracleUser implements UserDAO {
+public class PostgreUser implements UserDAO {
 
-    private static Logger logger = Logger.getLogger(OracleUser.class.getName());
+    private static Logger logger = Logger.getLogger(PostgreUser.class.getName());
     private static final String SELECT_QUERY = "SELECT * FROM users";
     private static final String SELECT_BY_URL_QUERY = "SELECT DISTINCT * FROM users inner join urls on urls.user_id = users.id where urls.id = CAST(:url_id AS integer)";
     private static final String CREATE_QUERY = "INSERT INTO Users (name, login, password, role) VALUES (:name, :login, :password, 2)";
@@ -35,7 +34,7 @@ public class OracleUser implements UserDAO {
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public OracleUser(NamedParameterJdbcTemplate jdbcTemplate) {
+    public PostgreUser(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
