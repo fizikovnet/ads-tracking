@@ -110,11 +110,12 @@ public class RestApiController {
             url.setUrl(uri);
             url.setUserId(user.getId());
             url.setActive((active.equals("true")) ? true : false);
+            daoFactory.getUrlDAO().create(url);
         } else {
             url.setActive((active.equals("true")) ? true : false);
             url.setUrl(uri);
+            daoFactory.getUrlDAO().update(url);
         }
-        daoFactory.getUrlDAO().update(url);
 
         return new ResponseEntity(credential, HttpStatus.OK);
     }

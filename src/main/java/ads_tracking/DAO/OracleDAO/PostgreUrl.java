@@ -27,9 +27,14 @@ public class PostgreUrl implements UrlDAO {
     private static final String UPDATE_QUERY = "UPDATE urls SET url = :url, active = CAST(:active AS boolean) WHERE id = CAST(:id AS integer)";
     private static final String DELETE_QUERY = "DELETE FROM urls WHERE id = :id";
     private static final String SELECT_QUERY_ONLY_ACTIVE_URLS = "SELECT * FROM urls WHERE active = true";
+    private static final String CREATE_QUERY = "INSERT INTO urls (url, user_id, active) VALUES (:url, CAST(:user_id AS integer), CAST(:active AS boolean))";
 
     @Override
     public boolean create(Url object) throws DAOException {
+        if (this.jdbcTemplate.update(CREATE_QUERY, getMapForInsert(object)) == 1) {
+            return true;
+        }
+
         return false;
     }
 
@@ -84,6 +89,15 @@ public class PostgreUrl implements UrlDAO {
         namedParameters.put("url", object.getUrl());
         namedParameters.put("active", object.isActive() ? "TRUE" : "FALSE");
         namedParameters.put("id", String.valueOf(object.getId()));
+
+        return namedParameters;
+    }
+
+    private Map<String, String> getMapForInsert(Url object) {
+        Map<String, String> namedParameters = new HashMap<>();
+        namedParameters.put("url", object.getUrl());
+        namedParameters.put("user_id", String.valueOf(object.getUserId()));
+        namedParameters.put("active", object.isActive() ? "TRUE" : "FALSE");
 
         return namedParameters;
     }
