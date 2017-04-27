@@ -21,7 +21,8 @@ public class PostgreAds implements AdDAO {
 
     private static final String SELECT_QUERY = "SELECT * FROM ads";
     private static final String SELECT_QUERY_BY_ID = "SELECT * FROM ads WHERE id = :id";
-    private static final String SELECT_QUERY_BY_URL_ID = "SELECT * FROM ads WHERE url_id = :url_id LIMIT 50";
+    private static final String SELECT_QUERY_BY_URL_ID = "SELECT * FROM ads WHERE url_id = :url_id LIMIT 500";
+    private static final String SELECT_QUERY_NOT_SEND_BY_URL_ID = "SELECT * FROM ads WHERE url_id = :url_id AND send = false LIMIT 50";
     private static final String CREATE_QUERY = "INSERT INTO ads (link, description, title, url_id, sid, send) VALUES" +
             " (:link, :description, :title, :url_id, :sid, false)";
     private static final String UPDATE_SEND_FLAG_QUERY = "UPDATE ads SET send = true WHERE id = CAST(:id AS integer)";
@@ -62,6 +63,11 @@ public class PostgreAds implements AdDAO {
     @Override
     public List<Ad> getAdsByUrlId(int url_id) {
         return jdbcTemplate.query(SELECT_QUERY_BY_URL_ID, Collections.singletonMap("url_id", url_id), new ItemMapper());
+    }
+
+    @Override
+    public List<Ad> getNotSendAdsByUrlId(int url_id) {
+        return jdbcTemplate.query(SELECT_QUERY_NOT_SEND_BY_URL_ID, Collections.singletonMap("url_id", url_id), new ItemMapper());
     }
 
     @Override

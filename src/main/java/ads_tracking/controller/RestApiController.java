@@ -6,12 +6,14 @@ import ads_tracking.Entity.Ad;
 import ads_tracking.Entity.Url;
 import ads_tracking.Entity.User;
 import ads_tracking.Exception.DAOException;
+import ads_tracking.model.Credential;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +28,7 @@ public class RestApiController {
     private DAOFactory daoFactory;
 
     @RequestMapping(value = "/api/login", method = RequestMethod.POST)
-    public @ResponseBody Credential login(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity login(HttpServletRequest request, HttpServletResponse response) {
         Credential credential = new Credential();
         UserDAO userDAO = daoFactory.getUserDAO();
         String login = request.getParameter("email");
@@ -36,25 +38,25 @@ public class RestApiController {
             user = userDAO.getUserByLogin(login);
             if (user != null) {
                 if (user.getPassword().equals(Hashing.sha256().hashString(password, Charsets.UTF_8).toString())) {
-                    credential.username = user.getFullName();
-                    credential.userId = user.getId();
+                    credential.setUsername(user.getFullName());
+                    credential.setUserId(user.getId());
                 } else {
-                    credential.error = true;
-                    credential.error_msg = "Password error";
+                    credential.setError_msg("Password error");
+                    credential.setError(true);
                 }
             } else {
-                credential.error_msg = "User with specified login is not exist";
-                credential.error = true;
+                credential.setError_msg("User with specified login is not exist");
+                credential.setError(true);
             }
         } catch (DAOException e) {
             e.printStackTrace();
         }
 
-        return credential;
+        return new ResponseEntity(credential, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/register", method = RequestMethod.POST)
-    public @ResponseBody Credential register(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity register(HttpServletRequest request, HttpServletResponse response) {
         Credential credential = new Credential();
         UserDAO userDAO = daoFactory.getUserDAO();
         String name = request.getParameter("name");
@@ -68,34 +70,34 @@ public class RestApiController {
             userDAO.create(user);
             User existUser = daoFactory.getUserDAO().getUserByLogin(user.getLogin());
             if (existUser != null) {
-                credential.username = existUser.getFullName();
-                credential.userId = existUser.getId();
+                credential.setUsername(existUser.getFullName());
+                credential.setUserId(existUser.getId());
             } else {
-                credential.error_msg = "Unspecified error";
-                credential.error = true;
+                credential.setError_msg("Unspecified error");
+                credential.setError(true);
             }
         } catch (DAOException e) {
             e.printStackTrace();
         }
 
-        return credential;
+        return new ResponseEntity(credential, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/uri", method = RequestMethod.POST)
-    public @ResponseBody Credential uri(HttpServletRequest request, HttpServletResponse response) throws DAOException {
+    public ResponseEntity uri(HttpServletRequest request, HttpServletResponse response) throws DAOException {
         Credential credential = new Credential();
         UserDAO userDAO = daoFactory.getUserDAO();
         String userId = request.getParameter("user_id");
         User user = userDAO.getById(Integer.valueOf(userId));
         Url url = daoFactory.getUrlDAO().getUrlByLogin(user.getId());
-        credential.uri = url.getUrl();
-        credential.act_uri = url.isActive() ? "true" : "false";
+        credential.setUri(url.getUrl());
+        credential.setAct_uri(url.isActive() ? "true" : "false");
 
-        return credential;
+        return new ResponseEntity(credential, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/update-uri", method = RequestMethod.POST)
-    public @ResponseBody Credential updateUri(HttpServletRequest request, HttpServletResponse response) throws DAOException {
+    public ResponseEntity updateUri(HttpServletRequest request, HttpServletResponse response) throws DAOException {
         Credential credential = new Credential();
         UserDAO userDAO = daoFactory.getUserDAO();
         String userId = request.getParameter("user_id");
@@ -107,11 +109,11 @@ public class RestApiController {
         url.setUrl(uri);
         daoFactory.getUrlDAO().update(url);
 
-        return credential;
+        return new ResponseEntity(credential, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/ads", method = RequestMethod.POST)
-    public @ResponseBody List<Ad> getItems(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity getItems(HttpServletRequest request, HttpServletResponse response) {
         final List<Ad> ads = new ArrayList<>();
         try {
             User user = daoFactory.getUserDAO().getById(Integer.valueOf(request.getParameter("user_id")));
@@ -126,7 +128,7 @@ public class RestApiController {
             e.printStackTrace();
         }
 
-        return ads;
+        return new ResponseEntity(ads, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/refresh-token", method = RequestMethod.POST)
@@ -139,15 +141,6 @@ public class RestApiController {
         } catch (DAOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static class Credential {
-        boolean error = false;
-        String username;
-        String uri;
-        String act_uri;
-        int userId;
-        String error_msg;
     }
 
 }

@@ -36,6 +36,7 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
 			<mvc:exclude-mapping path="/login"/>
+			<mvc:exclude-mapping path="/api/**"/>
 			<bean class="ads_tracking.Interceptors.CheckUserInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>

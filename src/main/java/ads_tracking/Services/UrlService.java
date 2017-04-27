@@ -10,30 +10,31 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service
 public class UrlService {
 
     @Autowired
     private DAOFactory daoFactory;
 
-    public UrlService() {
+    @PostConstruct
+    private void launch() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
                     try {
-                        List<Url> urls = daoFactory.getUrlDAO().getAll();
+                        List<Url> urls = daoFactory.getUrlDAO().getActiveUrls();
                         for (Url url : urls) {
-                            if (url.isActive()) {
-                                getAds(url.getId());
-                                Thread.sleep(10000);
-                            }
+                            getAds(url);
                         }
+                        Thread.sleep(10000);
                     } catch (DAOException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
@@ -50,10 +51,9 @@ public class UrlService {
         return uriList;
     }
 
-    public List<Ad> getAds(int urlId) throws DAOException {
-        Url url = daoFactory.getUrlDAO().getById(urlId);
+    public List<Ad> getAds(Url url) throws DAOException {
         List<Ad> ads = getUrlContent(url.getUrl());
-        fillDB(ads, urlId);
+        fillDB(ads, url.getId());
 
         return ads;
     }

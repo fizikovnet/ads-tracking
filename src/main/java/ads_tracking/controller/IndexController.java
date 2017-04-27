@@ -54,18 +54,6 @@ public class IndexController {
         return new ModelAndView("url-list", "urlList", outputUrlList);
     }
 
-    @RequestMapping(value = "/get-ads", params = {"url-id"})
-    public ModelAndView getAds(HttpSession session, @RequestParam(value = "url-id") int urlId) {
-        List<Ad> adList = null;
-        try {
-            adList = urlService.getAds(urlId);
-        } catch (DAOException e) {
-            e.printStackTrace();
-        }
-
-        return new ModelAndView("ads", "listAds", adList);
-    }
-
     @RequestMapping(value = "/user", params = {"id"})
     public ModelAndView showUserStats(HttpSession session, @RequestParam(value = "id") int id) {
         Map<String, Object> model = new HashMap<>();

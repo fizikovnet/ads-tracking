@@ -9,6 +9,8 @@ public interface AdDAO extends CommonDAOInterface<Ad> {
 
     List<Ad> getAdsByUrlId(int url_id);
 
+    List<Ad> getNotSendAdsByUrlId(int url_id);
+
     void setSendFlagForAds(List<Ad> ads);
 
     void deleteAdsByUrl(Url url);

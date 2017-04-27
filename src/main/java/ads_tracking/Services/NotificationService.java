@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.http.client.HttpClient;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Service
@@ -20,13 +21,41 @@ public class NotificationService {
     @Autowired
     private DAOFactory daoFactory;
 
-    public NotificationService() {
+    @PostConstruct
+    public void launch() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    notificate();
                     try {
+                        try {
+                            List<Url> listUrls = daoFactory.getUrlDAO().getActiveUrls();
+                            for (Url url : listUrls) {
+                                List<Ad> adList = daoFactory.getAdsDAO().getNotSendAdsByUrlId(url.getId());
+                                for (Ad ad : adList) {
+                                    Url eUrl = daoFactory.getUrlDAO().getById(ad.getUrlId());
+                                    User user = daoFactory.getUserDAO().getById(eUrl.getUserId());
+                                    if (!"".equals(user.getToken())) {
+                                        HttpClient httpClient = HttpClientBuilder.create().build();
+
+                                        try {
+                                            String message = "{ \"notification\": {\"title\": \"" + ad.getTitle() + "\", \"body\": \"" + ad.getDescription() + "\"}, \"to\" : \"" + user.getToken() + "\"}";
+                                            HttpPost request = new HttpPost("https://fcm.googleapis.com/fcm/send");
+                                            StringEntity params = new StringEntity(message);
+                                            request.addHeader("content-type", "application/json");
+                                            request.addHeader("Authorization", "key=AAAAy9NzyJE:APA91bGsVD0BS6mGrTBzBv02scM92ZSgXLQ_TXeYXsMHzECDrriwlrHF7dacV9l4F9rUStkLk39CWx0VJs_0QnvS5Hv-K5ErvWVmWd8Ouoz5mP8k10GnpkhIGB3SPRENApSOjccEsVzN");
+                                            request.setEntity(params);
+                                            httpClient.execute(request);
+
+
+                                        } catch (Exception ex) {
+
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                        }
                         Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -35,54 +64,5 @@ public class NotificationService {
             }
         });
         thread.start();
-    }
-
-    public void notificate() {
-
-        try {
-            //ToDo вытаскивать из базы только активные урлы
-            List<Url> listUrls = daoFactory.getUrlDAO().getAll();
-            for (Url url : listUrls) {
-                if (url.isActive()) {
-                    //ToDo вытаскивать из базы только не отправленные объявления
-                    List<Ad> adList = daoFactory.getAdsDAO().getAdsByUrlId(url.getId());
-                    for (Ad ad : adList) {
-                        if (!ad.isSend()) {
-                            sendNotify(ad);
-                        }
-                    }
-                }
-            }
-        } catch (DAOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sendNotify(Ad ad) throws DAOException {
-
-        Url url = daoFactory.getUrlDAO().getById(ad.getUrlId());
-        User user = daoFactory.getUserDAO().getById(url.getUserId());
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-
-        try {
-            String message = "{ \"notification\": {" +
-                    "    \"title\": \""+ ad.getTitle() +"\"," +
-                    "    \"body\": \""+ad.getDescription()+"\"" +
-                    "  }," +
-                    "  \"to\" : \""+user.getToken()+"" +
-                    "}";
-            HttpPost request = new HttpPost("https://fcm.googleapis.com/fcm/send");
-            StringEntity params =new StringEntity(message);
-            request.addHeader("content-type", "application/json");
-            request.addHeader("Authorization", "key=AAAA3VEqeqM:APA91bH7IfFaTMg-Mj0jr2lnFuae18_jgGROMxDq26qsOEh07hDh29KSBcR3NKDXAqHH-rUDRb1RMp5vDNylERRQ23Seu4cRq85uSK_nzxpbQzFHUJ8UNbLzIaYDVxDhnVXngeR5ifDA");
-            request.setEntity(params);
-            httpClient.execute(request);
-
-
-        }catch (Exception ex) {
-
-
-        }
     }
 }

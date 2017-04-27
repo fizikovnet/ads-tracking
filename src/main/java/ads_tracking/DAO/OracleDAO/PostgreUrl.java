@@ -26,6 +26,7 @@ public class PostgreUrl implements UrlDAO {
     private static final String SELECT_QUERY_BY_USER_ID = "SELECT * FROM urls WHERE user_id = :user_id";
     private static final String UPDATE_QUERY = "UPDATE urls SET url = :url, active = CAST(:active AS boolean) WHERE id = CAST(:id AS integer)";
     private static final String DELETE_QUERY = "DELETE FROM urls WHERE id = :id";
+    private static final String SELECT_QUERY_ONLY_ACTIVE_URLS = "SELECT * FROM urls WHERE active = true";
 
     @Override
     public boolean create(Url object) throws DAOException {
@@ -66,6 +67,11 @@ public class PostgreUrl implements UrlDAO {
             return result.get(0);
         }
         return null;
+    }
+
+    @Override
+    public List<Url> getActiveUrls() {
+        return jdbcTemplate.query(SELECT_QUERY_ONLY_ACTIVE_URLS, new ItemMapper());
     }
 
     @Override
