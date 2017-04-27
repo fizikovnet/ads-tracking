@@ -5,14 +5,24 @@ import ads_tracking.Entity.Ad;
 import ads_tracking.Entity.Url;
 import ads_tracking.Entity.User;
 import ads_tracking.Exception.DAOException;
+import com.google.common.collect.Lists;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.http.client.HttpClient;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -45,9 +55,11 @@ public class NotificationService {
                                             request.addHeader("content-type", "application/json");
                                             request.addHeader("Authorization", "key=AAAAy9NzyJE:APA91bGsVD0BS6mGrTBzBv02scM92ZSgXLQ_TXeYXsMHzECDrriwlrHF7dacV9l4F9rUStkLk39CWx0VJs_0QnvS5Hv-K5ErvWVmWd8Ouoz5mP8k10GnpkhIGB3SPRENApSOjccEsVzN");
                                             request.setEntity(params);
-                                            httpClient.execute(request);
-
-
+                                            HttpResponse response = httpClient.execute(request);
+                                            if (response.getStatusLine().getStatusCode() == 200) {
+                                                daoFactory.getAdsDAO().setSendFlagForAds(Collections.singletonList(ad));
+                                            }
+                                            Thread.sleep(10000);
                                         } catch (Exception ex) {
 
                                         }
