@@ -53,6 +53,7 @@ public class UrlService {
 
     public List<Ad> getAds(Url url) throws DAOException {
         List<Ad> ads = getUrlContent(url.getUrl());
+        System.out.println("fill Db " + url.getUrl());
         fillDB(ads, url.getId());
 
         return ads;
@@ -66,6 +67,7 @@ public class UrlService {
                     continue outer;
                 }
             }
+            System.out.println("-------------------Adding Ad ------------------");
             newAd.setUrlId(urlId);
             daoFactory.getAdsDAO().create(newAd);
         }

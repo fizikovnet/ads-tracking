@@ -30,7 +30,9 @@ public class PostgreAds implements AdDAO {
 
     @Override
     public boolean create(Ad object) throws DAOException {
+        System.out.println("Create AD");
         if (this.jdbcTemplate.update(CREATE_QUERY, getMapForInsert(object)) == 1) {
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Created");
             return true;
         }
         return false;
