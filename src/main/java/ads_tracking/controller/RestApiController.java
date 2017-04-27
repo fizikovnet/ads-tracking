@@ -105,8 +105,15 @@ public class RestApiController {
         String uri = request.getParameter("url");
         User user = userDAO.getById(Integer.valueOf(userId));
         Url url = daoFactory.getUrlDAO().getUrlByLogin(user.getId());
-        url.setActive((active.equals("true")) ? true : false);
-        url.setUrl(uri);
+        if (url == null) {
+            url = new Url();
+            url.setUrl(uri);
+            url.setUserId(user.getId());
+            url.setActive((active.equals("true")) ? true : false);
+        } else {
+            url.setActive((active.equals("true")) ? true : false);
+            url.setUrl(uri);
+        }
         daoFactory.getUrlDAO().update(url);
 
         return new ResponseEntity(credential, HttpStatus.OK);
