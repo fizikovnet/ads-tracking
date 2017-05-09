@@ -1,4 +1,4 @@
-package ads_tracking.DAO.OracleDAO;
+package ads_tracking.DAO.PostgreDAO;
 
 import ads_tracking.DAO.AdDAO;
 import ads_tracking.Entity.Ad;
@@ -55,7 +55,7 @@ public class PostgreAds implements AdDAO {
 
     @Override
     public Ad getById(int id) throws DAOException {
-        List<Ad> result = jdbcTemplate.query(SELECT_QUERY_BY_ID, Collections.singletonMap("id", id), new ItemMapper());
+        List<Ad> result = jdbcTemplate.query(SELECT_QUERY_BY_ID, Collections.singletonMap("id", id), new AdsMapper());
         if (!result.isEmpty()) {
             return result.get(0);
         }
@@ -64,12 +64,12 @@ public class PostgreAds implements AdDAO {
 
     @Override
     public List<Ad> getAdsByUrlId(int url_id) {
-        return jdbcTemplate.query(SELECT_QUERY_BY_URL_ID, Collections.singletonMap("url_id", url_id), new ItemMapper());
+        return jdbcTemplate.query(SELECT_QUERY_BY_URL_ID, Collections.singletonMap("url_id", url_id), new AdsMapper());
     }
 
     @Override
     public List<Ad> getNotSendAdsByUrlId(int url_id) {
-        return jdbcTemplate.query(SELECT_QUERY_NOT_SEND_BY_URL_ID, Collections.singletonMap("url_id", url_id), new ItemMapper());
+        return jdbcTemplate.query(SELECT_QUERY_NOT_SEND_BY_URL_ID, Collections.singletonMap("url_id", url_id), new AdsMapper());
     }
 
     @Override
@@ -82,10 +82,10 @@ public class PostgreAds implements AdDAO {
 
     @Override
     public List<Ad> getAll() throws DAOException {
-        return jdbcTemplate.query(SELECT_QUERY, new ItemMapper());
+        return jdbcTemplate.query(SELECT_QUERY, new AdsMapper());
     }
 
-    private static final class ItemMapper implements RowMapper<Ad> {
+    private static final class AdsMapper implements RowMapper<Ad> {
 
         public Ad mapRow(ResultSet rs, int rowNum) throws SQLException {
             Ad ad = new Ad();

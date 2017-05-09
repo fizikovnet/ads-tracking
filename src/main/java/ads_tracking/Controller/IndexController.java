@@ -1,6 +1,6 @@
-package ads_tracking.controller;
+package ads_tracking.Controller;
 
-import ads_tracking.DAO.OracleDAO.DAOFactory;
+import ads_tracking.DAO.PostgreDAO.DAOFactory;
 import ads_tracking.Entity.Ad;
 import ads_tracking.Entity.Url;
 import ads_tracking.Entity.User;
@@ -62,7 +62,7 @@ public class IndexController {
         List<Ad> ads = new ArrayList<>();
         try {
             user = daoFactory.getUserDAO().getById(id);
-            url = daoFactory.getUrlDAO().getUrlByLogin(user.getId());
+            url = daoFactory.getUrlDAO().getUrlByUserId(user.getId());
             if (url != null) {
                 ads = daoFactory.getAdsDAO().getAdsByUrlId(url.getId());
             }

@@ -1,6 +1,6 @@
-package ads_tracking.controller;
+package ads_tracking.Controller;
 
-import ads_tracking.DAO.OracleDAO.DAOFactory;
+import ads_tracking.DAO.PostgreDAO.DAOFactory;
 import ads_tracking.DAO.UserDAO;
 import ads_tracking.Entity.User;
 import ads_tracking.Exception.DAOException;

@@ -1,6 +1,6 @@
 package ads_tracking.Services;
 
-import ads_tracking.DAO.OracleDAO.DAOFactory;
+import ads_tracking.DAO.PostgreDAO.DAOFactory;
 import ads_tracking.Entity.Ad;
 import ads_tracking.Entity.Url;
 import ads_tracking.Exception.DAOException;
@@ -9,7 +9,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;

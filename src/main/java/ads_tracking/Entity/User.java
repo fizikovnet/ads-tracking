@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class User implements Identified, Serializable {
 
+    public static final int ADMIN_ID = 1;
+
     private int id;
     private String fullName;
     private String login;

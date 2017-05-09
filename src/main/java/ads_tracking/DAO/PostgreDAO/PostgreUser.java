@@ -1,4 +1,4 @@
-package ads_tracking.DAO.OracleDAO;
+package ads_tracking.DAO.PostgreDAO;
 
 import ads_tracking.DAO.UserDAO;
 import ads_tracking.Entity.Role;
@@ -9,12 +9,13 @@ import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class working with connection from {@link PostgreFactory} and implements all methods from {@link UserDAO}
@@ -78,7 +79,7 @@ public class PostgreUser implements UserDAO {
      */
     @Override
     public List<User> getAll() throws DAOException {
-        return jdbcTemplate.query(SELECT_QUERY, new ItemMapper());
+        return jdbcTemplate.query(SELECT_QUERY, new UserMapper());
     }
 
     /**
@@ -86,12 +87,12 @@ public class PostgreUser implements UserDAO {
      */
     @Override
     public User getById(int id) throws DAOException {
-        return jdbcTemplate.query(SELECT_USER_BY_ID_QUERY, Collections.singletonMap("id", id), new ItemMapper()).iterator().next();
+        return jdbcTemplate.query(SELECT_USER_BY_ID_QUERY, Collections.singletonMap("id", id), new UserMapper()).iterator().next();
     }
 
     @Override
     public User getUserByUrl(Url url) {
-        return jdbcTemplate.query(SELECT_BY_URL_QUERY, Collections.singletonMap("url_id", url.getId()), new ItemMapper()).iterator().next();
+        return jdbcTemplate.query(SELECT_BY_URL_QUERY, Collections.singletonMap("url_id", url.getId()), new UserMapper()).iterator().next();
     }
 
     /**
@@ -99,7 +100,7 @@ public class PostgreUser implements UserDAO {
      */
     @Override
     public User getUserByLogin(String login) throws DAOException {
-        List<User> result = jdbcTemplate.query(SELECT_USER_BY_LOGIN_QUERY, Collections.singletonMap("login", login), new ItemMapper());
+        List<User> result = jdbcTemplate.query(SELECT_USER_BY_LOGIN_QUERY, Collections.singletonMap("login", login), new UserMapper());
         if (!result.isEmpty() && result.size() == 1) {
             return result.get(0);
         }
@@ -111,7 +112,7 @@ public class PostgreUser implements UserDAO {
         this.jdbcTemplate.update(UPDATE_TOKEN_ID_QUERY, getMapForUpdateToken(userId, token));
     }
 
-    private static final class ItemMapper implements RowMapper<User> {
+    private static final class UserMapper implements RowMapper<User> {
 
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User user = new User(rs.getInt("id"));
@@ -119,7 +120,7 @@ public class PostgreUser implements UserDAO {
             user.setLogin(rs.getString("login"));
             user.setPassword(rs.getString("password"));
             user.setToken(rs.getString("token_id"));
-            user.setRole((rs.getInt("role") != 1) ? Role.USER : Role.ADMIN);
+            user.setRole((rs.getInt("role") != User.ADMIN_ID) ? Role.USER : Role.ADMIN);
 
             return user;
         }

@@ -1,4 +1,4 @@
-package ads_tracking.model;
+package ads_tracking.Model;
 
 public class Credential {
 

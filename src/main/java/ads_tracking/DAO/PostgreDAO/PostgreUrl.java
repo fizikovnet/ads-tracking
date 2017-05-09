@@ -1,4 +1,4 @@
-package ads_tracking.DAO.OracleDAO;
+package ads_tracking.DAO.PostgreDAO;
 
 import ads_tracking.DAO.UrlDAO;
 import ads_tracking.Entity.Url;
@@ -58,7 +58,7 @@ public class PostgreUrl implements UrlDAO {
 
     @Override
     public Url getById(int id) throws DAOException {
-        List<Url> result = jdbcTemplate.query(SELECT_QUERY_BY_ID, Collections.singletonMap("id", id), new ItemMapper());
+        List<Url> result = jdbcTemplate.query(SELECT_QUERY_BY_ID, Collections.singletonMap("id", id), new UrlMapper());
         if (!result.isEmpty()) {
             return result.get(0);
         }
@@ -66,8 +66,8 @@ public class PostgreUrl implements UrlDAO {
     }
 
     @Override
-    public Url getUrlByLogin(int userId) {
-        List<Url> result = jdbcTemplate.query(SELECT_QUERY_BY_USER_ID, Collections.singletonMap("user_id", userId), new ItemMapper());
+    public Url getUrlByUserId(int userId) {
+        List<Url> result = jdbcTemplate.query(SELECT_QUERY_BY_USER_ID, Collections.singletonMap("user_id", userId), new UrlMapper());
         if (!result.isEmpty()) {
             return result.get(0);
         }
@@ -76,12 +76,12 @@ public class PostgreUrl implements UrlDAO {
 
     @Override
     public List<Url> getActiveUrls() {
-        return jdbcTemplate.query(SELECT_QUERY_ONLY_ACTIVE_URLS, new ItemMapper());
+        return jdbcTemplate.query(SELECT_QUERY_ONLY_ACTIVE_URLS, new UrlMapper());
     }
 
     @Override
     public List<Url> getAll() throws DAOException {
-        return jdbcTemplate.query(SELECT_QUERY, new ItemMapper());
+        return jdbcTemplate.query(SELECT_QUERY, new UrlMapper());
     }
 
     private Map<String, String> getMapForUpdate(Url object) {
@@ -102,7 +102,7 @@ public class PostgreUrl implements UrlDAO {
         return namedParameters;
     }
 
-    private static final class ItemMapper implements RowMapper<Url> {
+    private static final class UrlMapper implements RowMapper<Url> {
 
         public Url mapRow(ResultSet rs, int rowNum) throws SQLException {
             Url url = new Url();

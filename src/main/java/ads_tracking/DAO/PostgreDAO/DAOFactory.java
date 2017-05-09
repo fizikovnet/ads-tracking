@@ -1,4 +1,4 @@
-package ads_tracking.DAO.OracleDAO;
+package ads_tracking.DAO.PostgreDAO;
 
 import ads_tracking.DAO.*;
 

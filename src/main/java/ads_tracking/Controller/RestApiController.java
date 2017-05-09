@@ -1,12 +1,12 @@
-package ads_tracking.controller;
+package ads_tracking.Controller;
 
-import ads_tracking.DAO.OracleDAO.DAOFactory;
+import ads_tracking.DAO.PostgreDAO.DAOFactory;
 import ads_tracking.DAO.UserDAO;
 import ads_tracking.Entity.Ad;
 import ads_tracking.Entity.Url;
 import ads_tracking.Entity.User;
 import ads_tracking.Exception.DAOException;
-import ads_tracking.model.Credential;
+import ads_tracking.Model.Credential;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +89,7 @@ public class RestApiController {
         UserDAO userDAO = daoFactory.getUserDAO();
         String userId = request.getParameter("user_id");
         User user = userDAO.getById(Integer.valueOf(userId));
-        Url url = daoFactory.getUrlDAO().getUrlByLogin(user.getId());
+        Url url = daoFactory.getUrlDAO().getUrlByUserId(user.getId());
         credential.setUri(url.getUrl());
         credential.setAct_uri(url.isActive() ? "true" : "false");
 
@@ -104,7 +104,7 @@ public class RestApiController {
         String active = request.getParameter("active");
         String uri = request.getParameter("url");
         User user = userDAO.getById(Integer.valueOf(userId));
-        Url url = daoFactory.getUrlDAO().getUrlByLogin(user.getId());
+        Url url = daoFactory.getUrlDAO().getUrlByUserId(user.getId());
         if (url == null) {
             url = new Url();
             url.setUrl(uri);
@@ -125,7 +125,7 @@ public class RestApiController {
         final List<Ad> ads = new ArrayList<>();
         try {
             User user = daoFactory.getUserDAO().getById(Integer.valueOf(request.getParameter("user_id")));
-            ads.addAll(daoFactory.getAdsDAO().getAdsByUrlId(daoFactory.getUrlDAO().getUrlByLogin(user.getId()).getId()));
+            ads.addAll(daoFactory.getAdsDAO().getAdsByUrlId(daoFactory.getUrlDAO().getUrlByUserId(user.getId()).getId()));
             new Thread(new Runnable() {
                 @Override
                 public void run() {

@@ -1,22 +1,13 @@
 package ads_tracking.Services;
 
-import ads_tracking.DAO.OracleDAO.DAOFactory;
+import ads_tracking.DAO.PostgreDAO.DAOFactory;
 import ads_tracking.Entity.Ad;
 import ads_tracking.Entity.Url;
 import ads_tracking.Entity.User;
-import ads_tracking.Exception.DAOException;
-import com.google.common.collect.Lists;
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.http.client.HttpClient;

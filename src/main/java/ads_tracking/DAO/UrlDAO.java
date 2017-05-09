@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface UrlDAO extends CommonDAOInterface<Url> {
 
-    Url getUrlByLogin(int userId);
+    Url getUrlByUserId(int userId);
 
     List<Url> getActiveUrls();
 
