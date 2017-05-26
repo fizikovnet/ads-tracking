@@ -14,7 +14,7 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-4 wrapper">
+        <div class="col-xs-12 wrapper">
             <nav class="navbar navbar-inverse navbar-fixed-top">
                 <div class="container">
                     <ul class="nav navbar-nav">
@@ -28,24 +28,26 @@
                     </ul>
                 </div>
             </nav>
-            <h2>Данные пользователя ${model.user.getFullName()}</h2>
-            <table class="table table-hover table-bordered">
-                <tr>
-                    <td>#</td>
-                    <td>Имя</td>
-                    <td>Логин</td>
-                    <td>Роль</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>${model.user.getId()}</td>
-                    <td>${model.user.getFullName()}</td>
-                    <td>${model.user.getLogin()}</td>
-                    <td>${model.user.getRole()}</td>
-                    <td><a class="btn btn-info" href="/change-password">Изменить пароль</a></td>
-                </tr>
-            </table>
+            <h1>Изменение пароля</h1>
+            <form method="POST" action="/change-password">
+                <div class="form-group" style="width: 400px">
+                    <label>Текущий пароль:</label>
+                    <input class="form-control" name="currentPassword" type="password" required/>
+                </div>
+                <div class="form-group" style="width: 400px">
+                    <label>Новый пароль:</label>
+                    <input class="form-control" name="newPassword" type="password" required>
+                </div>
+                <div class="form-group" style="width: 400px">
+                    <label>Повторите пароль:</label>
+                    <input class="form-control" name="repeatPassword" type="password" required>
+                </div>
+                <div class="form-group">
+                        <input type="submit" value="Сохранить" class="btn btn-primary">
+                </div>
+            </form>
         </div>
+        <p class="error_msg">${requestScope.error}</p>
     </div>
 </div>
 </body>

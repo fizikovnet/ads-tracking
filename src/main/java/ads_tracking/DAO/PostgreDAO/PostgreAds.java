@@ -23,8 +23,8 @@ public class PostgreAds implements AdDAO {
     private static final String SELECT_QUERY_BY_ID = "SELECT * FROM ads WHERE id = :id";
     private static final String SELECT_QUERY_BY_URL_ID = "SELECT * FROM ads WHERE url_id = :url_id ORDER BY id DESC LIMIT 500";
     private static final String SELECT_QUERY_NOT_SEND_BY_URL_ID = "SELECT * FROM ads WHERE url_id = :url_id AND send = false ORDER BY id DESC LIMIT 50";
-    private static final String CREATE_QUERY = "INSERT INTO ads (link, description, title, url_id, sid, send) VALUES" +
-            " (:link, :description, :title, :url_id, :sid, false)";
+    private static final String CREATE_QUERY = "INSERT INTO ads (link, description, title, url_id, sid, send, img) VALUES" +
+            " (:link, :description, :title, :url_id, :sid, false, :img)";
     private static final String UPDATE_SEND_FLAG_QUERY = "UPDATE ads SET send = true WHERE id = CAST(:id AS integer)";
     private static final String DELETE_QUERY = "DELETE FROM ads WHERE url_id = CAST(:url_id AS integer)";
 
@@ -96,6 +96,7 @@ public class PostgreAds implements AdDAO {
             ad.setsId(rs.getString("sid"));
             ad.setUrlId(rs.getInt("url_id"));
             ad.setSend(rs.getBoolean("send"));
+            ad.setImg(rs.getString("img"));
 
             return ad;
         }
@@ -108,6 +109,7 @@ public class PostgreAds implements AdDAO {
         namedParameters.put("description", object.getDescription());
         namedParameters.put("url_id", object.getUrlId());
         namedParameters.put("sid", object.getsId().trim());
+        namedParameters.put("img", object.getImg().trim());
 
         return namedParameters;
     }

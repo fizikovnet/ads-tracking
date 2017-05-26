@@ -11,6 +11,15 @@ public class Ad implements Identified, Serializable {
     private String sId;
     private int urlId;
     private boolean send;
+    private String img;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public boolean isSend() {
         return send;

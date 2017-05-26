@@ -10,31 +10,29 @@
     <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
-    <script src="<c:url value="/resources/js/login.js" />"></script>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
-            <h1>Login Page</h1>
-            <form action="login" method="post" id="loginForm">
-                <div class="form-group col-xs-4">
-                    <label class="control-label">Login</label>
-                    <input type="text" name="login" class="form-control" required>
-                </div>
-                <div class="form-group col-xs-4">
-                    <label>Password</label>
-                    <input type="password" name="password" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <div class="col-xs-1">
-                        <button type="submit" class="btn btn-primary">Sign in</button>
+            <div style="width: 400px; margin: 0 auto">
+                <h1 style="text-align: center">Ads Tracking</h1>
+                <h3 style="text-align: center">Вход в Личный кабинет</h3>
+                <form action="login" method="post" id="loginForm">
+                    <div class="form-group">
+                        <label class="control-label">Логин</label>
+                        <input type="text" name="login" class="form-control" required>
                     </div>
-                </div>
-            </form>
-            <c:if test="${requestScope.error}">
-                <p class="error_msg">${requestScope.error}</p>
-            </c:if>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Войти</button>
+                    </div>
+                </form>
+            </div>
+            <p class="error_msg">${requestScope.error}</p>
         </div>
     </div>
 </div>

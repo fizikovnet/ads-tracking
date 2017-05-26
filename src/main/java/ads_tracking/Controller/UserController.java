@@ -68,6 +68,38 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/change-password", method = RequestMethod.GET)
+    public String showChangePasswordForm(){
+        return "changePassword";
+    }
+
+    @RequestMapping(value = "/change-password", method = RequestMethod.POST)
+    public String changePassword(HttpServletRequest request, HttpServletResponse response){
+        String currentPassword = request.getParameter("currentPassword");
+        String newPassword = request.getParameter("newPassword");
+        String repeatPassword = request.getParameter("repeatPassword");
+        User user = (User) request.getSession().getAttribute("user");
+        if (user.getPassword().equals(Hashing.sha256().hashString(currentPassword, Charsets.UTF_8).toString())) {
+            if (newPassword.equals(repeatPassword)) {
+                user.setPassword(Hashing.sha256().hashString(newPassword, Charsets.UTF_8).toString());
+                try {
+                    daoFactory.getUserDAO().update(user);
+                } catch (DAOException e) {
+                    e.printStackTrace();
+                }
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                return "redirect:/user?id=" + user.getId();
+            } else {
+                request.setAttribute("error", "Пароли не совпадают");
+                return "changePassword";
+            }
+        } else {
+            request.setAttribute("error", "Текущий пароль введен не верно");
+            return "changePassword";
+        }
+    }
+
 //    @RequestMapping(value = "/register", method = RequestMethod.POST)
 //    public String handleRegisterForm(HttpServletRequest request, HttpServletResponse response) {
 //        try {

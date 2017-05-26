@@ -22,21 +22,14 @@ import java.util.Map;
 @Controller
 public class IndexController {
 
-
     @Autowired
     private DAOFactory daoFactory;
     @Autowired
     private UrlService urlService;
 
     @RequestMapping(value = "/index")
-    public ModelAndView index() {
-        List<User> userList = null;
-        try {
-            userList = daoFactory.getUserDAO().getAll();
-        } catch (DAOException e) {
-            e.printStackTrace();
-        }
-        return new ModelAndView("index", "users", userList);
+    public String index() {
+        return "index";
     }
 
     @RequestMapping(value = "/url-list")

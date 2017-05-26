@@ -27,7 +27,7 @@ public class PostgreUser implements UserDAO {
     private static final String SELECT_QUERY = "SELECT * FROM users";
     private static final String SELECT_BY_URL_QUERY = "SELECT DISTINCT * FROM users inner join urls on urls.user_id = users.id where urls.id = CAST(:url_id AS integer)";
     private static final String CREATE_QUERY = "INSERT INTO Users (name, login, password, role) VALUES (:name, :login, :password, 2)";
-    private static final String UPDATE_QUERY = "UPDATE Users SET full_name = :full_name, billing_address = :billing_address, login = :login, password = :password WHERE id = :id";
+    private static final String UPDATE_QUERY = "UPDATE Users SET password = :password WHERE id = CAST(:id AS integer)";
     private static final String UPDATE_TOKEN_ID_QUERY = "UPDATE Users SET token_id = :token_id WHERE id = CAST(:id AS integer)";
     private static final String DELETE_QUERY = "DELETE FROM Users WHERE id = :id";
     private static final String SELECT_USER_BY_ID_QUERY = "SELECT * FROM Users WHERE Users.id = :id";
@@ -137,8 +137,6 @@ public class PostgreUser implements UserDAO {
 
     private Map<String, String> getMapForUpdate(User object) {
         Map<String, String> namedParameters = new HashMap<>();
-        namedParameters.put("full_name", object.getFullName());
-        namedParameters.put("login", object.getLogin());
         namedParameters.put("password", object.getPassword());
         namedParameters.put("id", String.valueOf(object.getId()));
 

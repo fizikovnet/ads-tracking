@@ -12,12 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class UrlService {
+
+    public static AtomicBoolean STATUS = new AtomicBoolean(true);
 
     @Autowired
     private DAOFactory daoFactory;
@@ -29,9 +33,11 @@ public class UrlService {
             public void run() {
                 while (true) {
                     try {
-                        List<Url> urls = daoFactory.getUrlDAO().getActiveUrls();
-                        for (Url url : urls) {
-                            getAds(url);
+                        if (STATUS.get()) {
+                            List<Url> urls = daoFactory.getUrlDAO().getActiveUrls();
+                            for (Url url : urls) {
+                                getAds(url);
+                            }
                         }
                         Thread.sleep(10000);
                     } catch (DAOException e) {
@@ -43,6 +49,14 @@ public class UrlService {
             }
         });
         thread.start();
+    }
+
+    public boolean validateUrl(Url url) {
+        List<Ad> list = getUrlContent(url.getUrl());
+        if (list.size() != 0) {
+            return true;
+        }
+        return false;
     }
 
     public List<Url> handleUrls() throws DAOException {

@@ -6,3 +6,4 @@
 .error-msg {color: red}
 .error_msg {color: red; text-align:left; font-size:20px}
 #searchParameters .errors {color: red}
+.wrapper {padding-top: 60px}

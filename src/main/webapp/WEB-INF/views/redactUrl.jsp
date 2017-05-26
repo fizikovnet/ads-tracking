@@ -14,11 +14,24 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-12 wrapper">
+            <nav class="navbar navbar-inverse navbar-fixed-top">
+                <div class="container">
+                    <ul class="nav navbar-nav">
+                        <a class="navbar-brand" href="/index">Ads Tracking</a>
+                        <li><a href="/user?id=${sessionScope.user.id}">Личные данные</a></li>
+                        <li><a href="/url">Управление URL</a></li>
+                        <c:if test="${sessionScope.user.role == 'ADMIN'}">
+                            <li><a href="/system">Параметры системы</a></li>
+                        </c:if>
+                        <li><a href="/logout">Выйти</a></li>
+                    </ul>
+                </div>
+            </nav>
             <h2>Редактирование URL</h2>
             <form:form method="POST" action="redact-url" commandName="url" >
                 <form:hidden path="id" />
-                <div class="form-group">
+                <div class="form-group" style="width: 400px">
                     <form:label path="url">URL:</form:label>
                     <form:input path="url" cssClass="form-control"/>
                 </div>
@@ -26,9 +39,7 @@
                     <form:checkbox path="active" label="Активно"/>
                 </div>
                 <div class="form-group">
-                    <div class="col-xs-1">
-                        <input type="submit" value="Сохранить" class="btn btn-primary">
-                    </div>
+                    <input type="submit" value="Сохранить" class="btn btn-primary">
                 </div>
             </form:form>
         </div>
