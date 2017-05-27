@@ -34,6 +34,7 @@
                     <table class="table table-hover table-bordered">
                         <tr>
                             <th>URL</th>
+                            <th></th>
                             <th>Валидность</th>
                             <th>Активность</th>
                             <th>Количество объявлений</th>
@@ -43,6 +44,9 @@
                             <tr>
                                 <td>
                                     <a href="${model.url.getUrl()}">${model.url.getUrl()}</a>
+                                </td>
+                                <td>
+                                    <a href="/ads" class="btn btn-default">Просмотр объявлений</a>
                                 </td>
                                 <td>
                                     <a class="btn btn-primary" href="/validate-url?urlId=${model.url.getId()}">Проверить URL</a>
@@ -59,7 +63,7 @@
                                     </c:if>
                                 </td>
                                 <td>
-                                        ${model.url.isActive() ? "Активно" : "Не активно"}
+                                        ${model.url.isActive() ? "<div class='alert alert-success' role='alert'>Активно</div>" : "<div class='alert alert-warning' role='alert'>Не активно</div>"}
                                 </td>
                                 <td>${model.adsCount}</td>
                                 <td>

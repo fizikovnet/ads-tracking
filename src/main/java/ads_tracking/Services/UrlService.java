@@ -95,8 +95,14 @@ public class UrlService {
             for (Element item : items) {
                 Ad ad = new Ad();
                 ad.setsId(item.attr("id").trim());
+                Elements img = item.getElementsByClass("b-photo");
                 Elements description = item.getElementsByClass("item-description-title-link");
                 Element title = description.get(0).getElementsByClass("item-description-title-link").get(0);
+                try {
+                    ad.setImg(img.get(0).getElementsByTag("img").get(0).absUrl("src"));
+                } catch (Exception e) {
+                    ad.setImg("");
+                }
                 ad.setTitle(title.text());
                 ad.setLink(title.attr("href"));
 

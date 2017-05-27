@@ -13,24 +13,38 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-12">
-            <h1>Список объявлений</h1>
-            <%--${listAds}--%>
+        <div class="col-xs-12 wrapper">
+            <nav class="navbar navbar-inverse navbar-fixed-top">
+                <div class="container">
+                    <ul class="nav navbar-nav">
+                        <a class="navbar-brand" href="/index">Ads Tracking</a>
+                        <li><a href="/user?id=${sessionScope.user.id}">Личные данные</a></li>
+                        <li><a href="/url">Управление URL</a></li>
+                        <c:if test="${sessionScope.user.role == 'ADMIN'}">
+                            <li><a href="/system">Параметры системы</a></li>
+                        </c:if>
+                        <li><a href="/logout">Выйти</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <h2>Список объявлений</h2>
             <c:if test="${not empty listAds}">
-
-                <ul>
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        <th>Изображение</th>
+                        <th>Название</th>
+                        <th>Цена</th>
+                    </tr>
                     <c:forEach var="ad" items="${listAds}">
-                        <li>
-                            <p>Нзвание: ${ad.title}</p>
-                            <p>Краткое описание: ${ad.description}</p>
-                            <p>Сылка: ${ad.link}</p>
-                            <p>ID: ${ad.id}</p>
-                            <p>URL ID: ${ad.urlId}</p>
-                            <p>Is send: ${ad.send}</p>
-                        </li>
+                        <tr>
+                            <td>
+                                <img src="${ad.img}">
+                            </td>
+                            <td><a href="https://www.avito.ru${ad.link}">${ad.title}</a></td>
+                            <td>${ad.description}</td>
+                        </tr>
                     </c:forEach>
-                </ul>
-
+                </table>
             </c:if>
         </div>
     </div>

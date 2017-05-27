@@ -21,7 +21,7 @@ public class PostgreAds implements AdDAO {
 
     private static final String SELECT_QUERY = "SELECT * FROM ads";
     private static final String SELECT_QUERY_BY_ID = "SELECT * FROM ads WHERE id = :id";
-    private static final String SELECT_QUERY_BY_URL_ID = "SELECT * FROM ads WHERE url_id = :url_id ORDER BY id DESC LIMIT 500";
+    private static final String SELECT_QUERY_BY_URL_ID = "SELECT * FROM ads WHERE url_id = :url_id ORDER BY id ASC LIMIT 500";
     private static final String SELECT_QUERY_NOT_SEND_BY_URL_ID = "SELECT * FROM ads WHERE url_id = :url_id AND send = false ORDER BY id DESC LIMIT 50";
     private static final String CREATE_QUERY = "INSERT INTO ads (link, description, title, url_id, sid, send, img) VALUES" +
             " (:link, :description, :title, :url_id, :sid, false, :img)";

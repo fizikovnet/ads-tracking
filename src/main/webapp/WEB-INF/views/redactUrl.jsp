@@ -31,7 +31,7 @@
             <h2>Редактирование URL</h2>
             <form:form method="POST" action="redact-url" commandName="url" >
                 <form:hidden path="id" />
-                <div class="form-group" style="width: 400px">
+                <div class="form-group" style="width: 600px">
                     <form:label path="url">URL:</form:label>
                     <form:input path="url" cssClass="form-control"/>
                 </div>
