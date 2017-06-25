@@ -6,6 +6,7 @@ import ads_tracking.Entity.Url;
 import ads_tracking.Entity.User;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class NotificationService {
                                         try {
                                             String message = "{ \"notification\": {\"title\": \"" + ad.getTitle() + "\", \"body\": \"" + ad.getDescription() + "\"}, \"to\" : \"" + user.getToken() + "\"}";
                                             HttpPost request = new HttpPost("https://fcm.googleapis.com/fcm/send");
-                                            StringEntity params = new StringEntity(message);
+                                            StringEntity params = new StringEntity(message, ContentType.APPLICATION_JSON);
                                             request.addHeader("content-type", "application/json");
                                             request.addHeader("Authorization", "key=AAAAy9NzyJE:APA91bGsVD0BS6mGrTBzBv02scM92ZSgXLQ_TXeYXsMHzECDrriwlrHF7dacV9l4F9rUStkLk39CWx0VJs_0QnvS5Hv-K5ErvWVmWd8Ouoz5mP8k10GnpkhIGB3SPRENApSOjccEsVzN");
                                             request.setEntity(params);
@@ -59,7 +60,7 @@ public class NotificationService {
                             }
                         } catch (Exception e) {
                         }
-                        Thread.sleep(10000);
+                        Thread.sleep(30000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

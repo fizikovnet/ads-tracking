@@ -117,6 +117,9 @@ public class RestApiController {
             daoFactory.getUrlDAO().update(url);
         }
 
+        credential.setUri(url.getUrl());
+        credential.setAct_uri(String.valueOf(url.isActive()));
+
         return new ResponseEntity(credential, HttpStatus.OK);
     }
 

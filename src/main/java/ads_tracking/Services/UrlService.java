@@ -39,7 +39,7 @@ public class UrlService {
                                 getAds(url);
                             }
                         }
-                        Thread.sleep(10000);
+                        Thread.sleep(30000);
                     } catch (DAOException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
